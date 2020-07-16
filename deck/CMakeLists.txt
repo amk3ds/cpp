@@ -1,0 +1,5 @@
+﻿cmake_minimum_required(VERSION 2.8)
+project(DeckOfCards)
+add_library(decklib src/card.h src/deck.h src/deck.cpp src/utils.h)
+add_executable(cardDeck MACOSX_BUNDLE src/main.cpp)
+target_link_libraries(cardDeck decklib)
