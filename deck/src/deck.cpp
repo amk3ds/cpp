@@ -18,8 +18,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-#include "deck.h"
 #include "utils.h"
+#include "deck.h"
+
 
 Deck::Deck(size_t packs)
 {
@@ -61,7 +62,7 @@ std::string Deck::summary(Card card) const
 std::string Deck::summary() const
 {
   std::string rv;
-  for (auto cd : cards)
+  for (auto& cd : cards)
   {
     rv.append(summary(cd));
   }

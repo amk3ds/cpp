@@ -16,6 +16,8 @@
 //========================================================================//
 #pragma once
 
+#include <chrono>
+
 class Interval
 {
 public:
@@ -25,5 +27,20 @@ private:
     size_t low;
     size_t high;
 };
+inline Interval interval(size_t lo, size_t hi) { return Interval(lo, hi); }
 
-Interval interval(size_t lo, size_t hi) { return Interval(lo, hi); }
+
+using Clock = std::chrono::high_resolution_clock;
+using ms = std::chrono::milliseconds;
+class StopWatch 
+{
+public:
+    StopWatch() { reset(); }
+    inline void reset() { start = Clock::now(); }
+    inline double elapsed() const 
+    {
+        return std::chrono::duration_cast<ms>(Clock::now() - start).count();
+    }
+private:
+    std::chrono::time_point<Clock> start;
+};
