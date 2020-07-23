@@ -90,11 +90,11 @@ Rank Deck::rank(Card card) const
 Suit Deck::suit(Card card) const
 {
   size_t cd = card % PACKSIZE;
-  if (interval(0, SUITSIZE).contains(cd))
+  if (interval(size_t(0), SUITSIZE).contains(cd))
     return Suit::CLUBS;
-  else if (interval(SUITSIZE, 2 * SUITSIZE).contains(cd))
+  else if (interval(SUITSIZE, size_t(2) * SUITSIZE).contains(cd))
     return Suit::DIAMONDS;
-  else if (interval(2 * SUITSIZE, 3 * SUITSIZE).contains(cd))
+  else if (interval(size_t(2) * SUITSIZE, size_t(3) * SUITSIZE).contains(cd))
     return Suit::HEARTS;
   else
     return Suit::SPADES;

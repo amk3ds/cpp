@@ -18,16 +18,18 @@
 
 #include <chrono>
 
+template <typename T>
 class Interval
 {
 public:
-    Interval(size_t lo, size_t hi) : low(lo), high(hi) {}
-    bool contains(size_t value) const { return low <= value && value < high; }
+    Interval(const T& lo, const T& hi) : low(lo), high(hi) {}
+    bool contains(const T& value) const { return low <= value && value < high; }
 private:
-    size_t low;
-    size_t high;
+    const T low;
+    const T high;
 };
-inline Interval interval(size_t lo, size_t hi) { return Interval(lo, hi); }
+template <typename T>
+inline Interval<T> interval(const T& lo, const T& hi) { return Interval<T>(lo, hi); }
 
 
 using Clock = std::chrono::high_resolution_clock;
