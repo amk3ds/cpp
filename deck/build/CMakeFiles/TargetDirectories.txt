@@ -1,4 +1,0 @@
-/media/amk3/D2/linux/code/cpp/deck/build/CMakeFiles/rebuild_cache.dir
-/media/amk3/D2/linux/code/cpp/deck/build/CMakeFiles/decklib.dir
-/media/amk3/D2/linux/code/cpp/deck/build/CMakeFiles/edit_cache.dir
-/media/amk3/D2/linux/code/cpp/deck/build/CMakeFiles/cardDeck.dir
