@@ -26,6 +26,6 @@ private:
     const T low;
     const T high;
 };
+
 template <typename T>
 inline Interval<T> interval(const T& lo, const T& hi) { return Interval<T>(lo, hi); }
-
