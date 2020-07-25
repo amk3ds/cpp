@@ -38,3 +38,12 @@ MyException::MyException(const std::string& message) : mMsg(message)
 {
 
 }
+
+class MatrixDimException : public MyException
+{
+	explicit MatrixDimException(const std::string& message) 
+	    : MyException { message }
+	{
+
+	}
+};

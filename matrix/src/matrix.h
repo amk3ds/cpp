@@ -18,6 +18,9 @@
 
 #include <algorithm>
 #include <iterator>
+#include <iostream>
+
+#include "myexception.h"
 
 template <typename T>
 class Matrix
@@ -83,42 +86,73 @@ public:
 
 	Matrix<T> operator+(const Matrix<T>& other)
 	{
-		Matrix copy(other.nRow, other.nCol);
-		std::transform(
-			std::cbegin(data), std::cend(data),
-			std::cbegin(other.data),
-			std::begin(copy.data),
-			[](const int& i, const int& j) {return i + j;}
-			);
-		return copy;
+		try
+		{
+			if (nRow != other.nRow || nCol != other.nCol)
+			{
+				throw MatrixDimException("Matrix Dimensions do not match!");
+			}
+			Matrix copy(other.nRow, other.nCol);
+			std::transform(
+				std::cbegin(data), std::cend(data),
+				std::cbegin(other.data),
+				std::begin(copy.data),
+				[](const int& i, const int& j) {return i + j;});
+			return copy;
+		}
+    	catch (const MatrixDimException& e)
+    	{
+    		std::cout << e.what() << std::endl;
+    	}
 	}
 	Matrix<T> operator-(const Matrix<T>& other)
 	{
-		Matrix copy(other.nRow, other.nCol);
-		std::transform(
-			std::cbegin(data), std::cend(data),
-			std::cbegin(other.data),
-			std::begin(copy.data),
-			[](const int& i, const int& j) {return i - j;}
-			);
-		return copy;
+		try
+		{
+			if (nRow != other.nRow || nCol != other.nCol)
+			{
+				throw MatrixDimException("Matrix Dimensions do not match!");
+			}
+			Matrix copy(other.nRow, other.nCol);
+			std::transform(
+				std::cbegin(data), std::cend(data),
+				std::cbegin(other.data),
+				std::begin(copy.data),
+				[](const int& i, const int& j) {return i - j;});
+			return copy;
+		}
+    	catch (const MatrixDimException& e)
+    	{
+    		std::cout << e.what() << std::endl;
+    	}
 	}
 	Matrix<T> operator*(const Matrix<T>& other)
 	{
-		Matrix copy(nRow, other.nCol);
-		for (size_t i = 0; i < nRow; i++)
+		try
 		{
-			for (size_t j = 0; j < other.nCol; j++)
+			if (nCol != other.nRow)
 			{
-				T sum {};
-				for (size_t k = 0; k < other.nRow; k++)
-				{
-					sum = sum + data[i * nCol + k] * other.data[k * other.nCol + j];
-				}
-				copy.data[i * other.nCol + j] = sum;
+				throw MatrixDimException("Matrix Dimensions do not match!");
 			}
+			Matrix copy(nRow, other.nCol);
+			for (size_t i = 0; i < nRow; i++)
+			{
+				for (size_t j = 0; j < other.nCol; j++)
+				{
+					T sum {};
+					for (size_t k = 0; k < other.nRow; k++)
+					{
+						sum += data[i * nCol + k] * other.data[k * other.nCol + j];
+					}
+					copy.data[i * other.nCol + j] = sum;
+				}
+			}
+			return copy;
 		}
-		return copy;
+    	catch (const MatrixDimException& e)
+    	{
+    		std::cout << e.what() << std::endl;
+    	}
 	}
 
 	Matrix<T> operator+(const T& scalar)
@@ -127,8 +161,7 @@ public:
 		std::transform(
 			std::cbegin(data), std::cend(data),
 			std::begin(copy.data),
-			[&](const int& i, const int& j) {return i + scalar;}
-			);
+			[&](const int& i, const int& j) {return i + scalar;});
 		return copy;
 	}
 	Matrix<T> operator-(const T& scalar)
@@ -137,8 +170,7 @@ public:
 		std::transform(
 			std::cbegin(data), std::cend(data),
 			std::begin(copy.data),
-			[&](const int& i, const int& j) {return i - scalar;}
-			);
+			[&](const int& i, const int& j) {return i - scalar;});
 		return copy;
 	}
 	Matrix<T> operator*(const T& scalar)
@@ -147,29 +179,50 @@ public:
 		std::transform(
 			std::cbegin(data), std::cend(data),
 			std::begin(copy.data),
-			[&](const int& i, const int& j) {return i * scalar;}
-			);
+			[&](const int& i, const int& j) {return i * scalar;});
 		return copy;
 	}
-    Matrix<T> operator/(const T& scalar)
-    {
+	Matrix<T> operator/(const T& scalar)
+	{
 		Matrix copy(nRow, nCol);
 		std::transform(
 			std::cbegin(data), std::cend(data),
 			std::begin(copy.data),
-			[&](const int& i, const int& j) {return i / scalar;}
-			);
+			[&](const int& i, const int& j) {return i / scalar;});
 		return copy;
     }
 
-    T& operator()(const size_t& row, const size_t& col) 
+    T& operator()(const size_t& row, const size_t& col)
     {
-    	return data[row * nCol + col];
+    	try
+    	{
+    		if (row > nRow || col > nCol)
+    		{
+    			throw std::out_of_range("Matrix index out of range");
+    		}
+    		return data[row * nCol + col];
+    	}
+    	catch (const std::out_of_range& e)
+    	{
+    		std::cout << e.what() << std::endl;
+    	}
     }
     const T& operator()(const size_t& row, const size_t& col) const
     {
-    	return data[row * nCol + col];
+    	try
+    	{
+    		if (row > nRow || col > nCol)
+    		{
+    			throw std::out_of_range("Matrix index out of range");
+    		}
+    		return data[row * nCol + col];
+    	}
+    	catch (const std::out_of_range& e)
+    	{
+    		std::cout << e.what() << std::endl;
+    	}
     }
+    
     size_t rows() const {return nRow;}
     size_t cols() const {return nCol;}
 
