@@ -22,12 +22,22 @@ template <typename T>
 class Matrix
 {
 public:
-	Matrix() {}
 
-    ~Matrix()
-    {
-    	delete [] data;
-    }
+	Matrix() {  Matrix(0, 0); }
+	Matrix(size_t rows, size_t cols)
+	{
+		if (rows != 0 && cols != 0)
+		{
+			nRow = rows;
+			nCol = cols;
+			data = new T[nRow * nCol]();
+		}
+	}
+	
+	virtual ~Matrix()
+	{
+		delete [] data;
+	}
 
 	Matrix(const Matrix& rhs)
 	{
@@ -70,7 +80,28 @@ public:
 		a.swap(b);
 	}
 
+	Matrix<T> operator+(const Matrix<T>& other);
+	Matrix<T> operator-(const Matrix<T>& other);
+	Matrix<T> operator*(const Matrix<T>& other);
+    Matrix<T> operator+(const T& scalar);
+    Matrix<T> operator-(const T& scalar);
+    Matrix<T> operator*(const T& scalar);
+    Matrix<T> operator/(const T& scalar);
+
+    T& operator()(const size_t& row, const size_t& col) 
+    {
+    	return data[row * nCol + col];
+    }
+    const T& operator()(const size_t& row, const size_t& col) const
+    {
+    	return data[row * nCol + col];
+    }
+    size_t rows() const {return nRow;}
+    size_t cols() const {return nCol;}
+
+private:
+
 	T* data = nullptr;
-    size_t nRow = 0;
-    size_t nCol = 0;
+	size_t nRow = 0;
+	size_t nCol = 0;
 };
