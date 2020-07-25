@@ -17,6 +17,7 @@
 #pragma once
 
 #include <algorithm>
+#include <iterator>
 
 template <typename T>
 class Matrix
@@ -26,7 +27,7 @@ public:
 	Matrix() {  Matrix(0, 0); }
 	Matrix(size_t rows, size_t cols)
 	{
-		if (rows != 0 && cols != 0)
+		if (rows > 0 && cols > 0)
 		{
 			nRow = rows;
 			nCol = cols;
@@ -80,13 +81,86 @@ public:
 		a.swap(b);
 	}
 
-	Matrix<T> operator+(const Matrix<T>& other);
-	Matrix<T> operator-(const Matrix<T>& other);
-	Matrix<T> operator*(const Matrix<T>& other);
-    Matrix<T> operator+(const T& scalar);
-    Matrix<T> operator-(const T& scalar);
-    Matrix<T> operator*(const T& scalar);
-    Matrix<T> operator/(const T& scalar);
+	Matrix<T> operator+(const Matrix<T>& other)
+	{
+		Matrix copy(other.nRow, other.nCol);
+		std::transform(
+			std::cbegin(data), std::cend(data),
+			std::cbegin(other.data),
+			std::begin(copy.data),
+			[](const int& i, const int& j) {return i + j;}
+			);
+		return copy;
+	}
+	Matrix<T> operator-(const Matrix<T>& other)
+	{
+		Matrix copy(other.nRow, other.nCol);
+		std::transform(
+			std::cbegin(data), std::cend(data),
+			std::cbegin(other.data),
+			std::begin(copy.data),
+			[](const int& i, const int& j) {return i - j;}
+			);
+		return copy;
+	}
+	Matrix<T> operator*(const Matrix<T>& other)
+	{
+		Matrix copy(nRow, other.nCol);
+		for (size_t i = 0; i < nRow; i++)
+		{
+			for (size_t j = 0; j < other.nCol; j++)
+			{
+				T sum {};
+				for (size_t k = 0; k < other.nRow; k++)
+				{
+					sum = sum + data[i * nCol + k] * other.data[k * other.nCol + j];
+				}
+				copy.data[i * other.nCol + j] = sum;
+			}
+		}
+		return copy;
+	}
+
+	Matrix<T> operator+(const T& scalar)
+	{
+		Matrix copy(nRow, nCol);
+		std::transform(
+			std::cbegin(data), std::cend(data),
+			std::begin(copy.data),
+			[&](const int& i, const int& j) {return i + scalar;}
+			);
+		return copy;
+	}
+	Matrix<T> operator-(const T& scalar)
+	{
+		Matrix copy(nRow, nCol);
+		std::transform(
+			std::cbegin(data), std::cend(data),
+			std::begin(copy.data),
+			[&](const int& i, const int& j) {return i - scalar;}
+			);
+		return copy;
+	}
+	Matrix<T> operator*(const T& scalar)
+	{
+		Matrix copy(nRow, nCol);
+		std::transform(
+			std::cbegin(data), std::cend(data),
+			std::begin(copy.data),
+			[&](const int& i, const int& j) {return i * scalar;}
+			);
+		return copy;
+	}
+    Matrix<T> operator/(const T& scalar)
+    {
+		Matrix copy(nRow, nCol);
+		std::transform(
+			std::cbegin(data), std::cend(data),
+			std::begin(copy.data),
+			[&](const int& i, const int& j) {return i / scalar;}
+			);
+		return copy;
+    }
 
     T& operator()(const size_t& row, const size_t& col) 
     {
