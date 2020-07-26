@@ -97,7 +97,7 @@ public:
 				std::cbegin(data), std::cend(data),
 				std::cbegin(other.data),
 				std::begin(copy.data),
-				[](const int& i, const int& j) {return i + j;});
+				[](auto&& i, auto&& j) {return i + j;});
 			return copy;
 		}
     	catch (const MatrixDimException& e)
@@ -118,7 +118,7 @@ public:
 				std::cbegin(data), std::cend(data),
 				std::cbegin(other.data),
 				std::begin(copy.data),
-				[](const int& i, const int& j) {return i - j;});
+				[](auto&& i, auto&& j) {return i - j;});
 			return copy;
 		}
     	catch (const MatrixDimException& e)
@@ -161,7 +161,7 @@ public:
 		std::transform(
 			std::cbegin(data), std::cend(data),
 			std::begin(copy.data),
-			[&](const int& i, const int& j) {return i + scalar;});
+			[&](auto&& i) {return i + scalar;});
 		return copy;
 	}
 	Matrix<T> operator-(const T& scalar)
@@ -170,7 +170,7 @@ public:
 		std::transform(
 			std::cbegin(data), std::cend(data),
 			std::begin(copy.data),
-			[&](const int& i, const int& j) {return i - scalar;});
+			[&](auto&& i) {return i - scalar;});
 		return copy;
 	}
 	Matrix<T> operator*(const T& scalar)
@@ -179,7 +179,7 @@ public:
 		std::transform(
 			std::cbegin(data), std::cend(data),
 			std::begin(copy.data),
-			[&](const int& i, const int& j) {return i * scalar;});
+			[&](auto&& i) {return i * scalar;});
 		return copy;
 	}
 	Matrix<T> operator/(const T& scalar)
@@ -188,7 +188,7 @@ public:
 		std::transform(
 			std::cbegin(data), std::cend(data),
 			std::begin(copy.data),
-			[&](const int& i, const int& j) {return i / scalar;});
+			[&](auto&& i) {return i / scalar;});
 		return copy;
     }
 

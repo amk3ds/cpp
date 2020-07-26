@@ -28,4 +28,4 @@ private:
 };
 
 template <typename T>
-inline Interval<T> interval(const T& lo, const T& hi) { return Interval<T>(lo, hi); }
+inline Interval<T> interval(T&& lo, T&& hi) { return Interval<T>(lo, hi); }
